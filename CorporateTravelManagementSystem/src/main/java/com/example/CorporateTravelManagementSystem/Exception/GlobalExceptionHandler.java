@@ -40,13 +40,6 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(
-            Exception exception,
-            HttpServletRequest request) {
-        return buildErrorResponse(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI());
-    }
-
     private ResponseEntity<ErrorResponse> buildErrorResponse(String message, HttpStatus status, String path) {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),

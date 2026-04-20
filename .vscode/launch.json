@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-CorporateTravelManagementSystemApplication<CorporateTravelManagementSystem>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.CorporateTravelManagementSystem.CorporateTravelManagementSystemApplication",
+            "projectName": "CorporateTravelManagementSystem",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

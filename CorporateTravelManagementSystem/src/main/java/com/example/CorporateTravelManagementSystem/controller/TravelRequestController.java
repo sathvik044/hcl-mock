@@ -1,4 +1,4 @@
-package com.example.CorporateTravelManagementSystem.controller;
+package com.example.CorporateTravelManagementSystem.Controller;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.CorporateTravelManagementSystem.dto.TravelRequestRequestDto;
 import com.example.CorporateTravelManagementSystem.dto.TravelRequestResponseDto;
-import com.example.CorporateTravelManagementSystem.service.TravelRequestService;
+import com.example.CorporateTravelManagementSystem.Service.TravelRequestService;
 
 import lombok.RequiredArgsConstructor;
 

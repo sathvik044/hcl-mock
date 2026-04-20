@@ -1,9 +1,9 @@
-package com.example.CorporateTravelManagementSystem.controller;
+package com.example.CorporateTravelManagementSystem.Controller;
 
 import com.example.CorporateTravelManagementSystem.dto.UserRequestDto;
 import com.example.CorporateTravelManagementSystem.dto.UserResponseDto;
 import com.example.CorporateTravelManagementSystem.enums.UserRole;
-import com.example.CorporateTravelManagementSystem.service.UserService;
+import com.example.CorporateTravelManagementSystem.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

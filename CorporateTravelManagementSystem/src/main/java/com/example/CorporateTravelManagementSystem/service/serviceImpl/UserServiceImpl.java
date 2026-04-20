@@ -1,4 +1,4 @@
-package com.example.CorporateTravelManagementSystem.service.serviceImpl;
+package com.example.CorporateTravelManagementSystem.Service.serviceImpl;
 
 import com.example.CorporateTravelManagementSystem.Exception.UserAlreadyExistsException;
 import com.example.CorporateTravelManagementSystem.Exception.UserNotFoundException;
@@ -8,7 +8,7 @@ import com.example.CorporateTravelManagementSystem.entity.User;
 import com.example.CorporateTravelManagementSystem.enums.UserRole;
 import com.example.CorporateTravelManagementSystem.mapper.UserMapper;
 import com.example.CorporateTravelManagementSystem.Repository.UserRepository;
-import com.example.CorporateTravelManagementSystem.service.UserService;
+import com.example.CorporateTravelManagementSystem.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.example.CorporateTravelManagementSystem.exception;
+package com.example.CorporateTravelManagementSystem.Exception;
 
 public class BadRequestException extends RuntimeException {
 

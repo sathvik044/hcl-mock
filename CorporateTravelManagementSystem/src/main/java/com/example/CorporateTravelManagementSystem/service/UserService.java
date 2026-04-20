@@ -1,4 +1,4 @@
-package com.example.CorporateTravelManagementSystem.service;
+package com.example.CorporateTravelManagementSystem.Service;
 
 import com.example.CorporateTravelManagementSystem.dto.UserRequestDto;
 import com.example.CorporateTravelManagementSystem.dto.UserResponseDto;

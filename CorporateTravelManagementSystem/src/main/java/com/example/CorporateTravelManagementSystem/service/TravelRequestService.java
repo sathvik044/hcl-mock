@@ -1,4 +1,4 @@
-package com.example.CorporateTravelManagementSystem.service;
+package com.example.CorporateTravelManagementSystem.Service;
 
 import java.util.List;
 

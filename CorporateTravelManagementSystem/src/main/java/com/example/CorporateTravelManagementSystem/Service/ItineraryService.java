@@ -12,8 +12,8 @@ import com.example.CorporateTravelManagementSystem.dto.ItineraryResponseDto;
 import com.example.CorporateTravelManagementSystem.entity.Itinerary;
 import com.example.CorporateTravelManagementSystem.entity.TravelRequestEntity;
 import com.example.CorporateTravelManagementSystem.enums.ItineraryStatus;
-import com.example.CorporateTravelManagementSystem.exception.BadRequestException;
-import com.example.CorporateTravelManagementSystem.exception.ResourceNotFoundException;
+import com.example.CorporateTravelManagementSystem.Exception.BadRequestException;
+import com.example.CorporateTravelManagementSystem.Exception.ResourceNotFoundException;
 import com.example.CorporateTravelManagementSystem.mapper.ItineraryMapper;
 
 import lombok.RequiredArgsConstructor;
