@@ -26,6 +26,20 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(exception.getMessage(), HttpStatus.CONFLICT, request.getRequestURI());
     }
 
+    @ExceptionHandler(TravelRequestNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleTravelRequestNotFoundException(
+            TravelRequestNotFoundException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND, request.getRequestURI());
+    }
+
+    @ExceptionHandler(TravelRequestStateException.class)
+    public ResponseEntity<ErrorResponse> handleTravelRequestStateException(
+            TravelRequestStateException exception,
+            HttpServletRequest request) {
+        return buildErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(
             Exception exception,
