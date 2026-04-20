@@ -1,20 +1,20 @@
 package com.example.CorporateTravelManagementSystem.entity;
 
-import com.example.CorporateTravelManagementSystem.enums.ActivityActionType;
-import com.example.CorporateTravelManagementSystem.enums.TravelRequestStatus;
+import com.example.CorporateTravelManagementSystem.enums.ApprovalStatus;
+import com.example.CorporateTravelManagementSystem.enums.ApproverType;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "travel_activity_logs")
+@Table(name = "travel_approvals")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TravelActivityLog {
+public class TravelApproval {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,27 +26,24 @@ public class TravelActivityLog {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ActivityActionType action;
+    private ApproverType approverType;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "performed_by", nullable = false)
-    private User performedBy;
+    @JoinColumn(name = "approver_id", nullable = false)
+    private User approver;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "old_status")
-    private TravelRequestStatus oldStatus;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "new_status")
-    private TravelRequestStatus newStatus;
-
     @Column(nullable = false)
-    private LocalDateTime timestamp;
+    private ApprovalStatus status;
+
+    private String remarks;
+
+    private LocalDateTime approvedAt;
 
     @PrePersist
     public void prePersist() {
-        if (timestamp == null) {
-            timestamp = LocalDateTime.now();
+        if (status == null) {
+            status = ApprovalStatus.PENDING;
         }
     }
 }

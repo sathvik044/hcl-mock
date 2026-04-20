@@ -9,8 +9,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TravelBudgetResponseDto {
-
+public class TravelBudgetDTO {
     private Long id;
     private String department;
     private String costCenter;

@@ -1,23 +1,32 @@
-package com.example.CorporateTravelManagementSystem.service;
+package com.example.CorporateTravelManagementSystem.Service;
 
-import com.example.CorporateTravelManagementSystem.dto.TravelBudgetRequestDto;
-import com.example.CorporateTravelManagementSystem.dto.TravelBudgetResponseDto;
+import com.example.CorporateTravelManagementSystem.dto.BudgetUtilizationDTO;
+import com.example.CorporateTravelManagementSystem.dto.TravelBudgetDTO;
+import com.example.CorporateTravelManagementSystem.dto.TravelBudgetRequestDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TravelBudgetService {
+    List<TravelBudgetDTO> getAllTravelBudgets();
 
-    TravelBudgetResponseDto createBudget(TravelBudgetRequestDto requestDto);
+    Optional<TravelBudgetDTO> getTravelBudgetById(Long id);
 
-    TravelBudgetResponseDto updateBudget(Long id, TravelBudgetRequestDto requestDto);
+    List<TravelBudgetDTO> getBudgetsByDepartment(String department);
 
-    TravelBudgetResponseDto getBudgetById(Long id);
+    List<TravelBudgetDTO> getBudgetsByCostCenter(String costCenter);
 
-    List<TravelBudgetResponseDto> getAllBudgets();
+    List<TravelBudgetDTO> getBudgetsByFinancialYear(String financialYear);
 
-    List<TravelBudgetResponseDto> getBudgetsByDepartment(String department);
+    Optional<TravelBudgetDTO> getBudgetByDepartmentAndYear(String department, String financialYear);
 
-    List<TravelBudgetResponseDto> getBudgetsByCostCenter(String costCenter);
+    BudgetUtilizationDTO getBudgetUtilization();
 
-    void deleteBudget(Long id);
+    TravelBudgetDTO createTravelBudget(TravelBudgetRequestDTO requestDTO);
+
+    TravelBudgetDTO updateTravelBudget(Long id, TravelBudgetRequestDTO requestDTO);
+
+    void deleteTravelBudget(Long id);
+
+    TravelBudgetDTO updateUtilizedAmount(Long id, java.math.BigDecimal amount);
 }

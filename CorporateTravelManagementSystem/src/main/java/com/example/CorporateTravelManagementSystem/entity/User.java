@@ -1,36 +1,39 @@
 package com.example.CorporateTravelManagementSystem.entity;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalDateTime;
-
-import com.example.CorporateTravelManagementSystem.enums.UserRole;
+import lombok.*;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Column(nullable = false)
+    private String firstName;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
+    private String lastName;
+
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
-
+    @Column(nullable = false)
     private String department;
 
-    private String costCenter;
+    @Column(nullable = false)
+    private String role;
 
-    @ManyToOne
-    @JoinColumn(name = "manager_id")
-    private User manager;
+    @Column(nullable = false)
+    private String employeeId;
 
-    private LocalDateTime createdAt;
+    @Column(name = "manager_id")
+    private Long managerId;
 }

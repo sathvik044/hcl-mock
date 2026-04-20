@@ -1,108 +1,140 @@
-package com.example.CorporateTravelManagementSystem.service.serviceImpl;
+package com.example.CorporateTravelManagementSystem.Service.serviceImpl;
 
-import com.example.CorporateTravelManagementSystem.dto.TravelBudgetRequestDto;
-import com.example.CorporateTravelManagementSystem.dto.TravelBudgetResponseDto;
+import com.example.CorporateTravelManagementSystem.dto.BudgetUtilizationDTO;
+import com.example.CorporateTravelManagementSystem.dto.TravelBudgetDTO;
+import com.example.CorporateTravelManagementSystem.dto.TravelBudgetRequestDTO;
 import com.example.CorporateTravelManagementSystem.entity.TravelBudget;
-import com.example.CorporateTravelManagementSystem.exception.BadRequestException;
-import com.example.CorporateTravelManagementSystem.exception.ResourceNotFoundException;
 import com.example.CorporateTravelManagementSystem.mapper.TravelBudgetMapper;
-import com.example.CorporateTravelManagementSystem.repository.TravelBudgetRepository;
-import com.example.CorporateTravelManagementSystem.service.TravelBudgetService;
+import com.example.CorporateTravelManagementSystem.Repository.TravelBudgetRepository;
+import com.example.CorporateTravelManagementSystem.Service.TravelBudgetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TravelBudgetServiceImpl implements TravelBudgetService {
 
     private final TravelBudgetRepository travelBudgetRepository;
+    private final TravelBudgetMapper travelBudgetMapper;
 
     @Override
-    public TravelBudgetResponseDto createBudget(TravelBudgetRequestDto requestDto) {
-        validateBudgetValues(requestDto);
-
-        travelBudgetRepository
-                .findByDepartmentIgnoreCaseAndCostCenterIgnoreCaseAndFinancialYear(
-                        requestDto.getDepartment(),
-                        requestDto.getCostCenter(),
-                        requestDto.getFinancialYear()
-                )
-                .ifPresent(existing -> {
-                    throw new BadRequestException("Budget already exists for this department, cost center, and financial year");
-                });
-
-        TravelBudget budget = TravelBudgetMapper.toEntity(requestDto);
-        TravelBudget savedBudget = travelBudgetRepository.save(budget);
-        return TravelBudgetMapper.toResponseDto(savedBudget);
+    @Transactional(readOnly = true)
+    public List<TravelBudgetDTO> getAllTravelBudgets() {
+        return travelBudgetRepository.findAll().stream()
+                .map(travelBudgetMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public TravelBudgetResponseDto updateBudget(Long id, TravelBudgetRequestDto requestDto) {
-        validateBudgetValues(requestDto);
+    @Transactional(readOnly = true)
+    public Optional<TravelBudgetDTO> getTravelBudgetById(Long id) {
+        return travelBudgetRepository.findById(id)
+                .map(travelBudgetMapper::toDTO);
+    }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<TravelBudgetDTO> getBudgetsByDepartment(String department) {
+        return travelBudgetRepository.findByDepartmentIgnoreCase(department).stream()
+                .map(travelBudgetMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TravelBudgetDTO> getBudgetsByCostCenter(String costCenter) {
+        return travelBudgetRepository.findByCostCenterIgnoreCase(costCenter).stream()
+                .map(travelBudgetMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TravelBudgetDTO> getBudgetsByFinancialYear(String financialYear) {
+        return travelBudgetRepository.findByFinancialYear(financialYear).stream()
+                .map(travelBudgetMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<TravelBudgetDTO> getBudgetByDepartmentAndYear(String department, String financialYear) {
+        return travelBudgetRepository.findByDepartmentIgnoreCaseAndFinancialYear(department, financialYear)
+                .map(travelBudgetMapper::toDTO);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BudgetUtilizationDTO getBudgetUtilization() {
+        List<TravelBudget> budgets = travelBudgetRepository.findAll();
+        BigDecimal totalAllocated = budgets.stream()
+                .map(TravelBudget::getTotalAllocated)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalUtilized = budgets.stream()
+                .map(TravelBudget::getTotalUtilized)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalRemaining = budgets.stream()
+                .map(TravelBudget::getRemainingBalance)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal utilizationPercentage = BigDecimal.ZERO;
+        if (totalAllocated.compareTo(BigDecimal.ZERO) > 0) {
+            utilizationPercentage = totalUtilized
+                    .multiply(BigDecimal.valueOf(100))
+                    .divide(totalAllocated, 2, RoundingMode.HALF_UP);
+        }
+
+        return BudgetUtilizationDTO.builder()
+                .budgetCount(budgets.size())
+                .totalAllocated(totalAllocated)
+                .totalUtilized(totalUtilized)
+                .totalRemaining(totalRemaining)
+                .utilizationPercentage(utilizationPercentage)
+                .build();
+    }
+
+    @Override
+    public TravelBudgetDTO createTravelBudget(TravelBudgetRequestDTO requestDTO) {
+        TravelBudget travelBudget = travelBudgetMapper.toEntity(requestDTO);
+        travelBudget.setTotalUtilized(BigDecimal.ZERO);
+        travelBudget.setRemainingBalance(requestDTO.getTotalAllocated());
+        TravelBudget savedBudget = travelBudgetRepository.save(travelBudget);
+        return travelBudgetMapper.toDTO(savedBudget);
+    }
+
+    @Override
+    public TravelBudgetDTO updateTravelBudget(Long id, TravelBudgetRequestDTO requestDTO) {
         TravelBudget existingBudget = travelBudgetRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("TravelBudget not found with id: " + id));
-
-        existingBudget.setDepartment(requestDto.getDepartment());
-        existingBudget.setCostCenter(requestDto.getCostCenter());
-        existingBudget.setFinancialYear(requestDto.getFinancialYear());
-        existingBudget.setTotalAllocated(requestDto.getTotalAllocated());
-        existingBudget.setTotalUtilized(requestDto.getTotalUtilized());
-        existingBudget.setRemainingBalance(requestDto.getTotalAllocated().subtract(requestDto.getTotalUtilized()));
-
-        TravelBudget updatedBudget = travelBudgetRepository.save(existingBudget);
-        return TravelBudgetMapper.toResponseDto(updatedBudget);
+                .orElseThrow(() -> new NoSuchElementException("Travel budget not found"));
+        TravelBudget updatedBudget = travelBudgetMapper.toEntity(requestDTO);
+        updatedBudget.setId(id);
+        updatedBudget.setTotalUtilized(existingBudget.getTotalUtilized());
+        updatedBudget.setRemainingBalance(requestDTO.getTotalAllocated().subtract(existingBudget.getTotalUtilized()));
+        TravelBudget savedBudget = travelBudgetRepository.save(updatedBudget);
+        return travelBudgetMapper.toDTO(savedBudget);
     }
 
     @Override
-    public TravelBudgetResponseDto getBudgetById(Long id) {
-        TravelBudget budget = travelBudgetRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("TravelBudget not found with id: " + id));
-        return TravelBudgetMapper.toResponseDto(budget);
+    public void deleteTravelBudget(Long id) {
+        travelBudgetRepository.deleteById(id);
     }
 
     @Override
-    public List<TravelBudgetResponseDto> getAllBudgets() {
-        return travelBudgetRepository.findAll()
-                .stream()
-                .map(TravelBudgetMapper::toResponseDto)
-                .toList();
-    }
-
-    @Override
-    public List<TravelBudgetResponseDto> getBudgetsByDepartment(String department) {
-        return travelBudgetRepository.findByDepartmentIgnoreCase(department)
-                .stream()
-                .map(TravelBudgetMapper::toResponseDto)
-                .toList();
-    }
-
-    @Override
-    public List<TravelBudgetResponseDto> getBudgetsByCostCenter(String costCenter) {
-        return travelBudgetRepository.findByCostCenterIgnoreCase(costCenter)
-                .stream()
-                .map(TravelBudgetMapper::toResponseDto)
-                .toList();
-    }
-
-    @Override
-    public void deleteBudget(Long id) {
-        TravelBudget budget = travelBudgetRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("TravelBudget not found with id: " + id));
-        travelBudgetRepository.delete(budget);
-    }
-
-    private void validateBudgetValues(TravelBudgetRequestDto requestDto) {
-        if (requestDto.getTotalUtilized().compareTo(requestDto.getTotalAllocated()) > 0) {
-            throw new BadRequestException("Total utilized cannot be greater than total allocated");
-        }
-
-        BigDecimal remainingBalance = requestDto.getTotalAllocated().subtract(requestDto.getTotalUtilized());
-        if (remainingBalance.compareTo(BigDecimal.ZERO) < 0) {
-            throw new BadRequestException("Remaining balance cannot be negative");
-        }
+    public TravelBudgetDTO updateUtilizedAmount(Long id, BigDecimal amount) {
+        TravelBudget travelBudget = travelBudgetRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Travel budget not found"));
+        travelBudget.setTotalUtilized(travelBudget.getTotalUtilized().add(amount));
+        travelBudget.setRemainingBalance(travelBudget.getTotalAllocated().subtract(travelBudget.getTotalUtilized()));
+        TravelBudget savedBudget = travelBudgetRepository.save(travelBudget);
+        return travelBudgetMapper.toDTO(savedBudget);
     }
 }

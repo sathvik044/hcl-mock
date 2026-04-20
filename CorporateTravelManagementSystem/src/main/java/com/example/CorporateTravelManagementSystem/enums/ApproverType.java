@@ -1,9 +1,8 @@
 package com.example.CorporateTravelManagementSystem.enums;
 
-public enum UserRole {
-    ADMIN,
-    EMPLOYEE,
+public enum ApproverType {
     MANAGER,
     FINANCE,
-    TRAVEL_DESK
+    HR,
+    EXECUTIVE
 }

@@ -1,47 +1,60 @@
 package com.example.CorporateTravelManagementSystem.entity;
+
+import com.example.CorporateTravelManagementSystem.enums.TravelStatus;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import com.example.CorporateTravelManagementSystem.enums.TravelType;
-import com.example.CorporateTravelManagementSystem.enums.TravelPurpose;
-import com.example.CorporateTravelManagementSystem.enums.TravelStatus;
+
 @Entity
 @Table(name = "travel_requests")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class TravelRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String requestNumber;
-
-    
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "employee_id", nullable = false)
     private User employee;
 
-    @Enumerated(EnumType.STRING)
-    private TravelType travelType;
+    @Column(nullable = false)
+    private String destination;
+
+    @Column(nullable = false)
+    private LocalDate travelStartDate;
+
+    @Column(nullable = false)
+    private LocalDate travelEndDate;
+
+    @Column(nullable = false)
+    private String purpose;
 
     @Enumerated(EnumType.STRING)
-    private TravelPurpose purpose;
-
-    private LocalDate fromDate;
-    private LocalDate toDate;
-
-    private String fromCity;
-    private String toCity;
-
-    private BigDecimal estimatedCost;
-    private BigDecimal actualCost;
-
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TravelStatus status;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal estimatedCost;
+
+    private String remarks;
+
+    private LocalDateTime submittedAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (status == null) {
+            status = TravelStatus.DRAFT;
+        }
+        if (status != TravelStatus.DRAFT && submittedAt == null) {
+            submittedAt = LocalDateTime.now();
+        }
+    }
 }
