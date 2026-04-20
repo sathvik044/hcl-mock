@@ -5,6 +5,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.example.CorporateTravelManagementSystem.Exception.TravelBookingStateException;
+import com.example.CorporateTravelManagementSystem.Exception.TravelRequestNotFoundException;
+import com.example.CorporateTravelManagementSystem.Exception.UserNotFoundException;
+import com.example.CorporateTravelManagementSystem.Exception.ResourceNotFoundException;
 import com.example.CorporateTravelManagementSystem.Repository.ItineraryRepository;
 import com.example.CorporateTravelManagementSystem.Repository.TravelBookingRepository;
 import com.example.CorporateTravelManagementSystem.Repository.TravelRequestRepository;
@@ -32,16 +36,16 @@ public class TravelBookingService {
     public TravelBookingResponseDTO create(TravelBookingRequestDTO dto) {
 
         TravelRequestEntity request = travelRequestRepository.findById(dto.getTravelRequestId())
-                .orElseThrow(() -> new RuntimeException("Travel request not found"));
+                .orElseThrow(() -> new TravelRequestNotFoundException("Travel request not found with id: " + dto.getTravelRequestId()));
 
         Itinerary itinerary = itineraryRepository.findById(dto.getItineraryId())
-                .orElseThrow(() -> new RuntimeException("Itinerary not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Itinerary not found with id: " + dto.getItineraryId()));
 
         User user = userRepository.findById(dto.getBookedBy())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + dto.getBookedBy()));
 
         if (request.getStatus() == null || !request.getStatus().name().equals("FINANCE_APPROVED")) {
-            throw new RuntimeException("Booking allowed only after finance approval");
+            throw new TravelBookingStateException("Booking allowed only after finance approval");
         }
 
         TravelBooking booking = TravelBookingMapper.toEntity(dto, request, itinerary, user);

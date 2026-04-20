@@ -16,4 +16,12 @@ public interface TravelRequestService {
     List<TravelRequestResponseDto> getAllTravelRequests();
 
     List<TravelRequestResponseDto> getTravelRequestsByEmployee(Long employeeId);
+
+    TravelRequestResponseDto approveByManager(Long id);
+
+    TravelRequestResponseDto rejectByManager(Long id);
+
+    TravelRequestResponseDto approveByFinance(Long id);
+
+    TravelRequestResponseDto rejectByFinance(Long id);
 }

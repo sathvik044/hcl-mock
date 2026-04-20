@@ -47,4 +47,24 @@ public class TravelRequestController {
     public List<TravelRequestResponseDto> getTravelRequestsByEmployee(@PathVariable Long employeeId) {
         return travelRequestService.getTravelRequestsByEmployee(employeeId);
     }
+
+    @PutMapping("/{id}/approve/manager")
+    public TravelRequestResponseDto approveByManager(@PathVariable Long id) {
+        return travelRequestService.approveByManager(id);
+    }
+
+    @PutMapping("/{id}/reject/manager")
+    public TravelRequestResponseDto rejectByManager(@PathVariable Long id) {
+        return travelRequestService.rejectByManager(id);
+    }
+
+    @PutMapping("/{id}/approve/finance")
+    public TravelRequestResponseDto approveByFinance(@PathVariable Long id) {
+        return travelRequestService.approveByFinance(id);
+    }
+
+    @PutMapping("/{id}/reject/finance")
+    public TravelRequestResponseDto rejectByFinance(@PathVariable Long id) {
+        return travelRequestService.rejectByFinance(id);
+    }
 }

@@ -5,6 +5,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.example.CorporateTravelManagementSystem.Exception.TravelExpenseNotFoundException;
+import com.example.CorporateTravelManagementSystem.Exception.TravelExpenseStateException;
+import com.example.CorporateTravelManagementSystem.Exception.TravelRequestNotFoundException;
+import com.example.CorporateTravelManagementSystem.Exception.UserNotFoundException;
 import com.example.CorporateTravelManagementSystem.Repository.TravelExpenseRepository;
 import com.example.CorporateTravelManagementSystem.Repository.TravelRequestRepository;
 import com.example.CorporateTravelManagementSystem.Repository.UserRepository;
@@ -29,13 +33,13 @@ public class TravelExpenseService {
     public TravelExpenseResponseDTO create(TravelExpenseRequestDTO dto) {
 
         TravelRequestEntity request = requestRepository.findById(dto.getTravelRequestId())
-                .orElseThrow(() -> new RuntimeException("Travel request not found"));
+                .orElseThrow(() -> new TravelRequestNotFoundException("Travel request not found with id: " + dto.getTravelRequestId()));
 
         User user = userRepository.findById(dto.getClaimedBy())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + dto.getClaimedBy()));
 
         if (dto.getAmount() > 1000 && (dto.getReceiptUrl() == null || dto.getReceiptUrl().isEmpty())) {
-            throw new RuntimeException("Receipt required for expenses above 1000");
+            throw new TravelExpenseStateException("Receipt required for expenses above 1000");
         }
 
         TravelExpense expense = TravelExpenseMapper.toEntity(dto, request, user);
@@ -52,10 +56,10 @@ public class TravelExpenseService {
     public TravelExpenseResponseDTO verify(Long id, Long financeUserId) {
 
         TravelExpense expense = expenseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Expense not found"));
+                .orElseThrow(() -> new TravelExpenseNotFoundException("Expense not found with id: " + id));
 
         User finance = userRepository.findById(financeUserId)
-                .orElseThrow(() -> new RuntimeException("Finance user not found"));
+                .orElseThrow(() -> new UserNotFoundException("Finance user not found with id: " + financeUserId));
 
         expense.setStatus(ExpenseStatus.VERIFIED);
         expense.setVerifiedBy(finance);
@@ -65,10 +69,10 @@ public class TravelExpenseService {
     public TravelExpenseResponseDTO reimburse(Long id) {
 
         TravelExpense expense = expenseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Expense not found"));
+                .orElseThrow(() -> new TravelExpenseNotFoundException("Expense not found with id: " + id));
 
         if (expense.getStatus() != ExpenseStatus.VERIFIED) {
-            throw new RuntimeException("Only verified expenses can be reimbursed");
+            throw new TravelExpenseStateException("Only verified expenses can be reimbursed");
         }
 
         expense.setStatus(ExpenseStatus.REIMBURSED);

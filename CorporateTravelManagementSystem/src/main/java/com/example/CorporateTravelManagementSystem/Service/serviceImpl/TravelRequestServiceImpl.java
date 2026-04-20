@@ -101,6 +101,50 @@ public class TravelRequestServiceImpl implements TravelRequestService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public TravelRequestResponseDto approveByManager(Long id) {
+        TravelRequestEntity travelRequest = getTravelRequestById(id);
+        if (travelRequest.getStatus() != TravelStatus.SUBMITTED) {
+            throw new TravelRequestStateException("Only submitted requests can be approved by manager");
+        }
+        travelRequest.setStatus(TravelStatus.MANAGER_APPROVED);
+        travelRequest.setUpdatedAt(LocalDateTime.now());
+        return travelRequestMapper.toResponseDto(travelRequestRepository.save(travelRequest));
+    }
+
+    @Override
+    public TravelRequestResponseDto rejectByManager(Long id) {
+        TravelRequestEntity travelRequest = getTravelRequestById(id);
+        if (travelRequest.getStatus() != TravelStatus.SUBMITTED) {
+            throw new TravelRequestStateException("Only submitted requests can be rejected by manager");
+        }
+        travelRequest.setStatus(TravelStatus.MANAGER_REJECTED);
+        travelRequest.setUpdatedAt(LocalDateTime.now());
+        return travelRequestMapper.toResponseDto(travelRequestRepository.save(travelRequest));
+    }
+
+    @Override
+    public TravelRequestResponseDto approveByFinance(Long id) {
+        TravelRequestEntity travelRequest = getTravelRequestById(id);
+        if (travelRequest.getStatus() != TravelStatus.MANAGER_APPROVED) {
+            throw new TravelRequestStateException("Only manager approved requests can be approved by finance");
+        }
+        travelRequest.setStatus(TravelStatus.FINANCE_APPROVED);
+        travelRequest.setUpdatedAt(LocalDateTime.now());
+        return travelRequestMapper.toResponseDto(travelRequestRepository.save(travelRequest));
+    }
+
+    @Override
+    public TravelRequestResponseDto rejectByFinance(Long id) {
+        TravelRequestEntity travelRequest = getTravelRequestById(id);
+        if (travelRequest.getStatus() != TravelStatus.MANAGER_APPROVED) {
+            throw new TravelRequestStateException("Only manager approved requests can be rejected by finance");
+        }
+        travelRequest.setStatus(TravelStatus.FINANCE_REJECTED);
+        travelRequest.setUpdatedAt(LocalDateTime.now());
+        return travelRequestMapper.toResponseDto(travelRequestRepository.save(travelRequest));
+    }
+
     private TravelRequestEntity getTravelRequestById(Long id) {
         return travelRequestRepository.findById(id)
                 .orElseThrow(() -> new TravelRequestNotFoundException("Travel request not found with id: " + id));

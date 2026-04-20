@@ -1,6 +1,7 @@
 package com.example.CorporateTravelManagementSystem.Service.serviceImpl;
 
 import com.example.CorporateTravelManagementSystem.Exception.UserAlreadyExistsException;
+import com.example.CorporateTravelManagementSystem.Exception.InvalidUserRoleException;
 import com.example.CorporateTravelManagementSystem.Exception.UserNotFoundException;
 import com.example.CorporateTravelManagementSystem.dto.UserRequestDto;
 import com.example.CorporateTravelManagementSystem.dto.UserResponseDto;
@@ -66,7 +67,7 @@ public List<UserResponseDto> getTeam(Long managerId) {
             .orElseThrow(() -> new UserNotFoundException("User not found with id: " + managerId));
 
     if (manager.getRole() != UserRole.MANAGER) {
-        throw new IllegalStateException("User is not a manager");
+        throw new InvalidUserRoleException("User is not a manager");
     }
 
     return userRepository.findByManager_Id(manager.getId())
