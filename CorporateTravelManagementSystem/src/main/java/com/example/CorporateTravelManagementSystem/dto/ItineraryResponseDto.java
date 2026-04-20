@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ItineraryResponseDTO {
+public class ItineraryResponseDto {
 
     private Long id;
     private Long travelRequestId;

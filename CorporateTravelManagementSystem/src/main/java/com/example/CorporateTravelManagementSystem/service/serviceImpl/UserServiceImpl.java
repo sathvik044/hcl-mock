@@ -7,7 +7,7 @@ import com.example.CorporateTravelManagementSystem.dto.UserResponseDto;
 import com.example.CorporateTravelManagementSystem.entity.User;
 import com.example.CorporateTravelManagementSystem.enums.UserRole;
 import com.example.CorporateTravelManagementSystem.mapper.UserMapper;
-import com.example.CorporateTravelManagementSystem.repository.UserRepository;
+import com.example.CorporateTravelManagementSystem.Repository.UserRepository;
 import com.example.CorporateTravelManagementSystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

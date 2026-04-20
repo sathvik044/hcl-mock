@@ -40,7 +40,7 @@ public class TravelBookingService {
         User user = userRepository.findById(dto.getBookedBy())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!request.getStatus().toString().equals("FINANCE_APPROVED")) {
+        if (request.getStatus() == null || !request.getStatus().name().equals("FINANCE_APPROVED")) {
             throw new RuntimeException("Booking allowed only after finance approval");
         }
 

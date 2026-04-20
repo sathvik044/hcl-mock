@@ -7,7 +7,7 @@ import com.example.CorporateTravelManagementSystem.enums.SegmentType;
 import lombok.Data;
 
 @Data
-public class ItineraryRequestDTO {
+public class ItineraryRequestDto {
 
     private Long travelRequestId;
     private SegmentType segmentType;

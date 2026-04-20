@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.CorporateTravelManagementSystem.Repository.ItineraryRepository;
 import com.example.CorporateTravelManagementSystem.Repository.TravelRequestRepository;
-import com.example.CorporateTravelManagementSystem.dto.ItineraryRequestDTO;
-import com.example.CorporateTravelManagementSystem.dto.ItineraryResponseDTO;
+import com.example.CorporateTravelManagementSystem.dto.ItineraryRequestDto;
+import com.example.CorporateTravelManagementSystem.dto.ItineraryResponseDto;
 import com.example.CorporateTravelManagementSystem.entity.Itinerary;
 import com.example.CorporateTravelManagementSystem.entity.TravelRequestEntity;
 import com.example.CorporateTravelManagementSystem.enums.ItineraryStatus;
@@ -26,7 +26,7 @@ public class ItineraryService {
     private final TravelRequestRepository travelRequestRepository;
 
     
-    public ItineraryResponseDTO create(ItineraryRequestDTO dto) {
+    public ItineraryResponseDto create(ItineraryRequestDto dto) {
         validateCreateRequest(dto);
 
         TravelRequestEntity travelRequest = travelRequestRepository.findById(dto.getTravelRequestId())
@@ -40,7 +40,7 @@ public class ItineraryService {
         return ItineraryMapper.toDTO(saved);
     }
 
-    public List<ItineraryResponseDTO> getByTravelRequest(Long requestId) {
+    public List<ItineraryResponseDto> getByTravelRequest(Long requestId) {
 
         List<Itinerary> itineraries = itineraryRepository.findByTravelRequestId(requestId);
 
@@ -48,7 +48,7 @@ public class ItineraryService {
                 .map(ItineraryMapper::toDTO)
                 .collect(Collectors.toList());
     }
-    public ItineraryResponseDTO confirm(Long id) {
+    public ItineraryResponseDto confirm(Long id) {
 
         Itinerary itinerary = itineraryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Itinerary not found for id: " + id));
@@ -64,7 +64,7 @@ public class ItineraryService {
         return ItineraryMapper.toDTO(updated);
     }
 
-    private void validateCreateRequest(ItineraryRequestDTO dto) {
+    private void validateCreateRequest(ItineraryRequestDto dto) {
         if (dto == null) {
             throw new BadRequestException("Request body is required");
         }

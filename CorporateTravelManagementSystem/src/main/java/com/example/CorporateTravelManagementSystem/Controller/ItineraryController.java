@@ -1,12 +1,12 @@
-package com.example.CorporateTravelManagementSystem.Controller;
+package com.example.CorporateTravelManagementSystem.controller;
 
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
 import com.example.CorporateTravelManagementSystem.Service.ItineraryService;
-import com.example.CorporateTravelManagementSystem.dto.ItineraryRequestDTO;
-import com.example.CorporateTravelManagementSystem.dto.ItineraryResponseDTO;
+import com.example.CorporateTravelManagementSystem.dto.ItineraryRequestDto;
+import com.example.CorporateTravelManagementSystem.dto.ItineraryResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,17 +18,17 @@ public class ItineraryController {
     private final ItineraryService itineraryService;
 
     @PostMapping
-    public ItineraryResponseDTO create(@RequestBody ItineraryRequestDTO dto) {
+    public ItineraryResponseDto create(@RequestBody ItineraryRequestDto dto) {
         return itineraryService.create(dto);
     }
 
     @GetMapping("/travel-request/{id}")
-    public List<ItineraryResponseDTO> getByTravelRequest(@PathVariable Long id) {
+    public List<ItineraryResponseDto> getByTravelRequest(@PathVariable Long id) {
         return itineraryService.getByTravelRequest(id);
     }
 
     @PutMapping("/{id}/confirm")
-    public ItineraryResponseDTO confirm(@PathVariable Long id) {
+    public ItineraryResponseDto confirm(@PathVariable Long id) {
         return itineraryService.confirm(id);
     }
 }

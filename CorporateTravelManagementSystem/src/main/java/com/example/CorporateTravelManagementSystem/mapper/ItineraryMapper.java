@@ -1,14 +1,14 @@
 package com.example.CorporateTravelManagementSystem.mapper;
 
-import com.example.CorporateTravelManagementSystem.dto.ItineraryRequestDTO;
-import com.example.CorporateTravelManagementSystem.dto.ItineraryResponseDTO;
+import com.example.CorporateTravelManagementSystem.dto.ItineraryRequestDto;
+import com.example.CorporateTravelManagementSystem.dto.ItineraryResponseDto;
 import com.example.CorporateTravelManagementSystem.entity.Itinerary;
 import com.example.CorporateTravelManagementSystem.entity.TravelRequestEntity;
 import com.example.CorporateTravelManagementSystem.enums.ItineraryStatus;
 
 public class ItineraryMapper {
 
-    public static Itinerary toEntity(ItineraryRequestDTO dto, TravelRequestEntity travelRequest) {
+    public static Itinerary toEntity(ItineraryRequestDto dto, TravelRequestEntity travelRequest) {
         return Itinerary.builder()
                 .travelRequest(travelRequest)
                 .segmentType(dto.getSegmentType())
@@ -22,8 +22,8 @@ public class ItineraryMapper {
                 .status(ItineraryStatus.PENDING)
                 .build();
     }
-    public static ItineraryResponseDTO toDTO(Itinerary entity) {
-        return ItineraryResponseDTO.builder()
+    public static ItineraryResponseDto toDTO(Itinerary entity) {
+        return ItineraryResponseDto.builder()
                 .id(entity.getId())
                 .travelRequestId(entity.getTravelRequest().getId())
                 .segmentType(entity.getSegmentType())
