@@ -1,4 +1,4 @@
-package com.example.demo.enums;
+package com.example.CorporateTravelManagementSystem.enums;
 
 public enum PaymentStatus {
     PENDING,

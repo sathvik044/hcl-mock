@@ -1,8 +1,8 @@
-package com.example.demo.entity;
+package com.example.CorporateTravelManagementSystem.entity;
 
 import java.time.LocalDate;
 
-import com.example.demo.enums.PaymentStatus;
+import com.example.CorporateTravelManagementSystem.enums.PaymentStatus;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +22,7 @@ public class TravelBooking {
 
     @ManyToOne
     @JoinColumn(name = "travel_request_id", nullable = false)
-    private TravelRequest travelRequest;
+    private TravelRequestEntity travelRequest;
 
     @ManyToOne
     @JoinColumn(name = "itinerary_id", nullable = false)

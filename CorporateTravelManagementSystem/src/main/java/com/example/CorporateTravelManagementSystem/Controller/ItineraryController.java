@@ -1,12 +1,12 @@
-package com.example.demo.controller;
+package com.example.CorporateTravelManagementSystem.Controller;
 
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.dto.ItineraryRequestDTO;
-import com.example.demo.dto.ItineraryResponseDTO;
-import com.example.demo.service.ItineraryService;
+import com.example.CorporateTravelManagementSystem.Service.ItineraryService;
+import com.example.CorporateTravelManagementSystem.dto.ItineraryRequestDTO;
+import com.example.CorporateTravelManagementSystem.dto.ItineraryResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 

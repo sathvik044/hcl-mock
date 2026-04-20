@@ -1,8 +1,8 @@
-package com.example.demo.dto;
+package com.example.CorporateTravelManagementSystem.dto;
 
 import java.time.LocalDateTime;
-import com.example.demo.enums.ItineraryStatus;
-import com.example.demo.enums.SegmentType;
+import com.example.CorporateTravelManagementSystem.enums.ItineraryStatus;
+import com.example.CorporateTravelManagementSystem.enums.SegmentType;
 import lombok.Builder;
 import lombok.Data;
 

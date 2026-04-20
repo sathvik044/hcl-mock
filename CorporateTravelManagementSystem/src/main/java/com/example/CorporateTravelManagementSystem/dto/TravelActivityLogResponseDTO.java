@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.CorporateTravelManagementSystem.dto;
 
 import java.time.LocalDateTime;
 

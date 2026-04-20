@@ -1,10 +1,10 @@
-package com.example.demo.repository;
+package com.example.CorporateTravelManagementSystem.Repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.entity.Itinerary;
+import com.example.CorporateTravelManagementSystem.entity.Itinerary;
 
 public interface ItineraryRepository extends JpaRepository<Itinerary, Long> {
 

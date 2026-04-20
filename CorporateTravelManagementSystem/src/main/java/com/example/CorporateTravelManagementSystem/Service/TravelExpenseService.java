@@ -1,20 +1,20 @@
-package com.example.demo.service;
+package com.example.CorporateTravelManagementSystem.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.TravelExpenseRequestDTO;
-import com.example.demo.dto.TravelExpenseResponseDTO;
-import com.example.demo.entity.TravelExpense;
-import com.example.demo.entity.TravelRequest;
-import com.example.demo.entity.User;
-import com.example.demo.enums.ExpenseStatus;
-import com.example.demo.mapper.TravelExpenseMapper;
-import com.example.demo.repository.TravelExpenseRepository;
-import com.example.demo.repository.TravelRequestRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.CorporateTravelManagementSystem.Repository.TravelExpenseRepository;
+import com.example.CorporateTravelManagementSystem.Repository.TravelRequestRepository;
+import com.example.CorporateTravelManagementSystem.Repository.UserRepository;
+import com.example.CorporateTravelManagementSystem.dto.TravelExpenseRequestDTO;
+import com.example.CorporateTravelManagementSystem.dto.TravelExpenseResponseDTO;
+import com.example.CorporateTravelManagementSystem.entity.TravelExpense;
+import com.example.CorporateTravelManagementSystem.entity.TravelRequestEntity;
+import com.example.CorporateTravelManagementSystem.entity.User;
+import com.example.CorporateTravelManagementSystem.enums.ExpenseStatus;
+import com.example.CorporateTravelManagementSystem.mapper.TravelExpenseMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +28,7 @@ public class TravelExpenseService {
 
     public TravelExpenseResponseDTO create(TravelExpenseRequestDTO dto) {
 
-        TravelRequest request = requestRepository.findById(dto.getTravelRequestId())
+        TravelRequestEntity request = requestRepository.findById(dto.getTravelRequestId())
                 .orElseThrow(() -> new RuntimeException("Travel request not found"));
 
         User user = userRepository.findById(dto.getClaimedBy())

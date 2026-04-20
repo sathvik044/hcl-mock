@@ -1,9 +1,9 @@
-package com.example.demo.entity;
+package com.example.CorporateTravelManagementSystem.entity;
 
 import java.time.LocalDateTime;
 
-import com.example.demo.enums.ItineraryStatus;
-import com.example.demo.enums.SegmentType;
+import com.example.CorporateTravelManagementSystem.enums.ItineraryStatus;
+import com.example.CorporateTravelManagementSystem.enums.SegmentType;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +22,7 @@ public class Itinerary {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "travel_request_id", nullable = false)
-    private TravelRequest travelRequest;
+    private TravelRequestEntity travelRequest;
 
     @Enumerated(EnumType.STRING)
     private SegmentType segmentType;

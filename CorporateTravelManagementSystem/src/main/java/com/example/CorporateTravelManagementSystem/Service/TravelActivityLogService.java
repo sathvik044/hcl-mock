@@ -1,16 +1,16 @@
-package com.example.demo.service;
+package com.example.CorporateTravelManagementSystem.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.TravelActivityLogResponseDTO;
-import com.example.demo.entity.TravelActivityLog;
-import com.example.demo.entity.TravelRequest;
-import com.example.demo.entity.User;
-import com.example.demo.mapper.TravelActivityLogMapper;
-import com.example.demo.repository.TravelActivityLogRepository;
+import com.example.CorporateTravelManagementSystem.Repository.TravelActivityLogRepository;
+import com.example.CorporateTravelManagementSystem.dto.TravelActivityLogResponseDTO;
+import com.example.CorporateTravelManagementSystem.entity.TravelActivityLog;
+import com.example.CorporateTravelManagementSystem.entity.TravelRequestEntity;
+import com.example.CorporateTravelManagementSystem.entity.User;
+import com.example.CorporateTravelManagementSystem.mapper.TravelActivityLogMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +20,7 @@ public class TravelActivityLogService {
 
     private final TravelActivityLogRepository logRepository;
 
-    public void logAction(TravelRequest request,
+    public void logAction(TravelRequestEntity request,
                           User user,
                           String action,
                           String oldStatus,

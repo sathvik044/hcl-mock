@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.CorporateTravelManagementSystem.entity;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +20,7 @@ public class TravelActivityLog {
 
     @ManyToOne
     @JoinColumn(name = "travel_request_id", nullable = false)
-    private TravelRequest travelRequest;
+    private TravelRequestEntity travelRequest;
 
     private String action; 
     @ManyToOne

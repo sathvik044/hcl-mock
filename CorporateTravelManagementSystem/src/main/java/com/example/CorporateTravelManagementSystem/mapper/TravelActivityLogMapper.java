@@ -1,15 +1,15 @@
-package com.example.demo.mapper;
+package com.example.CorporateTravelManagementSystem.mapper;
 
 import java.time.LocalDateTime;
 
-import com.example.demo.dto.TravelActivityLogResponseDTO;
-import com.example.demo.entity.TravelActivityLog;
-import com.example.demo.entity.TravelRequest;
-import com.example.demo.entity.User;
+import com.example.CorporateTravelManagementSystem.dto.TravelActivityLogResponseDTO;
+import com.example.CorporateTravelManagementSystem.entity.TravelActivityLog;
+import com.example.CorporateTravelManagementSystem.entity.TravelRequestEntity;
+import com.example.CorporateTravelManagementSystem.entity.User;
 
 public class TravelActivityLogMapper {
 
-    public static TravelActivityLog toEntity(TravelRequest request,
+    public static TravelActivityLog toEntity(TravelRequestEntity request,
                                              User user,
                                              String action,
                                              String oldStatus,

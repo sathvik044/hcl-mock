@@ -1,10 +1,10 @@
-package com.example.demo.repository;
+package com.example.CorporateTravelManagementSystem.Repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.entity.TravelActivityLog;
+import com.example.CorporateTravelManagementSystem.entity.TravelActivityLog;
 
 public interface TravelActivityLogRepository extends JpaRepository<TravelActivityLog, Long> {
 

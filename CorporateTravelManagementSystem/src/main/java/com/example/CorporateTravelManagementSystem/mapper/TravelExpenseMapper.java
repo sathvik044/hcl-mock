@@ -1,16 +1,16 @@
-package com.example.demo.mapper;
+package com.example.CorporateTravelManagementSystem.mapper;
 
-import com.example.demo.dto.TravelExpenseRequestDTO;
-import com.example.demo.dto.TravelExpenseResponseDTO;
-import com.example.demo.entity.TravelExpense;
-import com.example.demo.entity.TravelRequest;
-import com.example.demo.entity.User;
-import com.example.demo.enums.ExpenseStatus;
+import com.example.CorporateTravelManagementSystem.dto.TravelExpenseRequestDTO;
+import com.example.CorporateTravelManagementSystem.dto.TravelExpenseResponseDTO;
+import com.example.CorporateTravelManagementSystem.entity.TravelExpense;
+import com.example.CorporateTravelManagementSystem.entity.TravelRequestEntity;
+import com.example.CorporateTravelManagementSystem.entity.User;
+import com.example.CorporateTravelManagementSystem.enums.ExpenseStatus;
 
 public class TravelExpenseMapper {
 
     public static TravelExpense toEntity(TravelExpenseRequestDTO dto,
-                                         TravelRequest request,
+                                         TravelRequestEntity request,
                                          User user) {
 
         return TravelExpense.builder()

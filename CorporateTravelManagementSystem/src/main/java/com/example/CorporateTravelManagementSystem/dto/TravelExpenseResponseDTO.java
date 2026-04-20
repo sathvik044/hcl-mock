@@ -1,7 +1,7 @@
-package com.example.demo.dto;
+package com.example.CorporateTravelManagementSystem.dto;
 
-import com.example.demo.enums.ExpenseStatus;
-import com.example.demo.enums.ExpenseType;
+import com.example.CorporateTravelManagementSystem.enums.ExpenseStatus;
+import com.example.CorporateTravelManagementSystem.enums.ExpenseType;
 
 import lombok.Builder;
 import lombok.Data;

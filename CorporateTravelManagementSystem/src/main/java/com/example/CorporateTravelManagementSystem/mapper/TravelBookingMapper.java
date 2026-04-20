@@ -1,19 +1,19 @@
-package com.example.demo.mapper;
+package com.example.CorporateTravelManagementSystem.mapper;
 
 import java.time.LocalDate;
 
-import com.example.demo.dto.TravelBookingRequestDTO;
-import com.example.demo.dto.TravelBookingResponseDTO;
-import com.example.demo.entity.Itinerary;
-import com.example.demo.entity.TravelBooking;
-import com.example.demo.entity.TravelRequest;
-import com.example.demo.entity.User;
-import com.example.demo.enums.PaymentStatus;
+import com.example.CorporateTravelManagementSystem.dto.TravelBookingRequestDTO;
+import com.example.CorporateTravelManagementSystem.dto.TravelBookingResponseDTO;
+import com.example.CorporateTravelManagementSystem.entity.Itinerary;
+import com.example.CorporateTravelManagementSystem.entity.TravelBooking;
+import com.example.CorporateTravelManagementSystem.entity.TravelRequestEntity;
+import com.example.CorporateTravelManagementSystem.entity.User;
+import com.example.CorporateTravelManagementSystem.enums.PaymentStatus;
 
 public class TravelBookingMapper {
 
     public static TravelBooking toEntity(TravelBookingRequestDTO dto,
-                                         TravelRequest travelRequest,
+                                         TravelRequestEntity travelRequest,
                                          Itinerary itinerary,
                                          User user) {
 

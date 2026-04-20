@@ -1,7 +1,7 @@
-package com.example.demo.entity;
+package com.example.CorporateTravelManagementSystem.entity;
 
-import com.example.demo.enums.ExpenseStatus;
-import com.example.demo.enums.ExpenseType;
+import com.example.CorporateTravelManagementSystem.enums.ExpenseStatus;
+import com.example.CorporateTravelManagementSystem.enums.ExpenseType;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +22,7 @@ public class TravelExpense {
    
     @ManyToOne
     @JoinColumn(name = "travel_request_id", nullable = false)
-    private TravelRequest travelRequest;
+    private TravelRequestEntity travelRequest;
 
     @Enumerated(EnumType.STRING)
     private ExpenseType expenseType;

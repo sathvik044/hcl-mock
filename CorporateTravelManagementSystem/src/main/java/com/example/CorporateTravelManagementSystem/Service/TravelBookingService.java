@@ -1,21 +1,21 @@
-package com.example.demo.service;
+package com.example.CorporateTravelManagementSystem.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.TravelBookingRequestDTO;
-import com.example.demo.dto.TravelBookingResponseDTO;
-import com.example.demo.entity.Itinerary;
-import com.example.demo.entity.TravelBooking;
-import com.example.demo.entity.TravelRequest;
-import com.example.demo.entity.User;
-import com.example.demo.mapper.TravelBookingMapper;
-import com.example.demo.repository.ItineraryRepository;
-import com.example.demo.repository.TravelBookingRepository;
-import com.example.demo.repository.TravelRequestRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.CorporateTravelManagementSystem.Repository.ItineraryRepository;
+import com.example.CorporateTravelManagementSystem.Repository.TravelBookingRepository;
+import com.example.CorporateTravelManagementSystem.Repository.TravelRequestRepository;
+import com.example.CorporateTravelManagementSystem.Repository.UserRepository;
+import com.example.CorporateTravelManagementSystem.dto.TravelBookingRequestDTO;
+import com.example.CorporateTravelManagementSystem.dto.TravelBookingResponseDTO;
+import com.example.CorporateTravelManagementSystem.entity.Itinerary;
+import com.example.CorporateTravelManagementSystem.entity.TravelBooking;
+import com.example.CorporateTravelManagementSystem.entity.TravelRequestEntity;
+import com.example.CorporateTravelManagementSystem.entity.User;
+import com.example.CorporateTravelManagementSystem.mapper.TravelBookingMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +31,7 @@ public class TravelBookingService {
    
     public TravelBookingResponseDTO create(TravelBookingRequestDTO dto) {
 
-        TravelRequest request = travelRequestRepository.findById(dto.getTravelRequestId())
+        TravelRequestEntity request = travelRequestRepository.findById(dto.getTravelRequestId())
                 .orElseThrow(() -> new RuntimeException("Travel request not found"));
 
         Itinerary itinerary = itineraryRepository.findById(dto.getItineraryId())

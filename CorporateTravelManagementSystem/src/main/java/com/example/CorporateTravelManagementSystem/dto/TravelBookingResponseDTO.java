@@ -1,8 +1,8 @@
-package com.example.demo.dto;
+package com.example.CorporateTravelManagementSystem.dto;
 
 import java.time.LocalDate;
 
-import com.example.demo.enums.PaymentStatus;
+import com.example.CorporateTravelManagementSystem.enums.PaymentStatus;
 
 import lombok.Builder;
 import lombok.Data;

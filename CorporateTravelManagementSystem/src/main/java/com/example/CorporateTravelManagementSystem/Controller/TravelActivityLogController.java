@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.CorporateTravelManagementSystem.Controller;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.TravelActivityLogResponseDTO;
-import com.example.demo.service.TravelActivityLogService;
+import com.example.CorporateTravelManagementSystem.Service.TravelActivityLogService;
+import com.example.CorporateTravelManagementSystem.dto.TravelActivityLogResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 
