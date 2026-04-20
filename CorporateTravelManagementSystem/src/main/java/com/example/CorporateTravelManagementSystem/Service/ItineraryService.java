@@ -12,6 +12,8 @@ import com.example.CorporateTravelManagementSystem.dto.ItineraryResponseDTO;
 import com.example.CorporateTravelManagementSystem.entity.Itinerary;
 import com.example.CorporateTravelManagementSystem.entity.TravelRequestEntity;
 import com.example.CorporateTravelManagementSystem.enums.ItineraryStatus;
+import com.example.CorporateTravelManagementSystem.exception.BadRequestException;
+import com.example.CorporateTravelManagementSystem.exception.ResourceNotFoundException;
 import com.example.CorporateTravelManagementSystem.mapper.ItineraryMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -25,9 +27,11 @@ public class ItineraryService {
 
     
     public ItineraryResponseDTO create(ItineraryRequestDTO dto) {
+        validateCreateRequest(dto);
 
         TravelRequestEntity travelRequest = travelRequestRepository.findById(dto.getTravelRequestId())
-                .orElseThrow(() -> new RuntimeException("Travel Request not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Travel request not found for id: " + dto.getTravelRequestId()));
 
         Itinerary itinerary = ItineraryMapper.toEntity(dto, travelRequest);
 
@@ -47,10 +51,10 @@ public class ItineraryService {
     public ItineraryResponseDTO confirm(Long id) {
 
         Itinerary itinerary = itineraryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Itinerary not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Itinerary not found for id: " + id));
 
         if (itinerary.getStatus() != ItineraryStatus.PENDING) {
-            throw new RuntimeException("Only pending itineraries can be confirmed");
+            throw new BadRequestException("Only pending itineraries can be confirmed");
         }
 
         itinerary.setStatus(ItineraryStatus.CONFIRMED);
@@ -58,5 +62,33 @@ public class ItineraryService {
         Itinerary updated = itineraryRepository.save(itinerary);
 
         return ItineraryMapper.toDTO(updated);
+    }
+
+    private void validateCreateRequest(ItineraryRequestDTO dto) {
+        if (dto == null) {
+            throw new BadRequestException("Request body is required");
+        }
+        if (dto.getTravelRequestId() == null) {
+            throw new BadRequestException("travelRequestId is required");
+        }
+        if (dto.getSegmentType() == null) {
+            throw new BadRequestException("segmentType is required");
+        }
+        if (dto.getDepartureDateTime() == null || dto.getArrivalDateTime() == null) {
+            throw new BadRequestException("departureDateTime and arrivalDateTime are required");
+        }
+        if (!dto.getArrivalDateTime().isAfter(dto.getDepartureDateTime())) {
+            throw new BadRequestException("arrivalDateTime must be after departureDateTime");
+        }
+        if (dto.getFromLocation() == null || dto.getFromLocation().isBlank()
+                || dto.getToLocation() == null || dto.getToLocation().isBlank()) {
+            throw new BadRequestException("fromLocation and toLocation are required");
+        }
+        if (dto.getFromLocation().trim().equalsIgnoreCase(dto.getToLocation().trim())) {
+            throw new BadRequestException("fromLocation and toLocation cannot be the same");
+        }
+        if (dto.getCost() == null || dto.getCost() <= 0) {
+            throw new BadRequestException("cost must be greater than 0");
+        }
     }
 }
