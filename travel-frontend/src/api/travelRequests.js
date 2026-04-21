@@ -1,14 +1,14 @@
 import api from './axios';
 
-export const getTravelRequests     = (params) => api.get('/api/travel-requests', { params });
-export const getTravelRequestById  = (id)     => api.get(`/api/travel-requests/${id}`);
-export const getMyRequests         = (empId, params) => api.get(`/api/travel-requests/employee/${empId}`, { params });
-export const createTravelRequest   = (data)   => api.post('/api/travel-requests', data);
-export const submitRequest         = (id, actorId) => api.put(`/api/travel-requests/${id}/submit?actorId=${actorId}`);
-export const cancelRequest         = (id, actorId) => api.put(`/api/travel-requests/${id}/cancel?actorId=${actorId}`);
-export const getBookedRequests     = (params) => api.get('/api/travel-requests/booked', { params });
-export const bookRequest           = (id, data)   => api.put(`/api/travel-requests/${id}/book`, data);
-export const managerApprove        = (id, data)   => api.put(`/api/travel-requests/${id}/manager-approve`, data);
-export const managerReject         = (id, data)   => api.put(`/api/travel-requests/${id}/manager-reject`, data);
-export const financeApprove        = (id, data)   => api.put(`/api/travel-requests/${id}/finance-approve`, data);
-export const financeReject         = (id, data)   => api.put(`/api/travel-requests/${id}/finance-reject`, data);
+export const getTravelRequests     = (params) => api.get('/travel-requests', { params });
+export const getTravelRequestById  = (id)     => api.get(`/travel-requests/${id}`);
+export const getMyRequests         = (empId, params) => api.get(`/travel-requests/employee/${empId}`, { params });
+export const createTravelRequest   = (data)   => api.post('/travel-requests', data);
+export const submitRequest         = (id) => api.put(`/travel-requests/${id}/submit`);
+export const cancelRequest         = (id) => api.put(`/travel-requests/${id}/cancel`);
+export const getBookedRequests     = (params) => api.get('/travel-requests/booked', { params });
+export const bookRequest           = (id, data)   => api.put(`/travel-requests/${id}/book`, data);
+export const managerApprove        = (id)   => api.put(`/travel-requests/${id}/approve/manager`);
+export const managerReject         = (id)   => api.put(`/travel-requests/${id}/reject/manager`);
+export const financeApprove        = (id)   => api.put(`/travel-requests/${id}/approve/finance`);
+export const financeReject         = (id)   => api.put(`/travel-requests/${id}/reject/finance`);

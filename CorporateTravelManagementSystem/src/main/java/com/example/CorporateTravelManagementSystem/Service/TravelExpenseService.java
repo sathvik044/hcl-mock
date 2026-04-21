@@ -79,4 +79,18 @@ public class TravelExpenseService {
 
         return TravelExpenseMapper.toDTO(expenseRepository.save(expense));
     }
+
+    public TravelExpenseResponseDTO reject(Long id) {
+
+        TravelExpense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new TravelExpenseNotFoundException("Expense not found with id: " + id));
+
+        if (expense.getStatus() != ExpenseStatus.PENDING) {
+            throw new TravelExpenseStateException("Only pending expenses can be rejected");
+        }
+
+        expense.setStatus(ExpenseStatus.REJECTED);
+
+        return TravelExpenseMapper.toDTO(expenseRepository.save(expense));
+    }
 }

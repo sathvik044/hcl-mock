@@ -60,21 +60,20 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
- @Override
-public List<UserResponseDto> getTeam(Long managerId) {
+    @Override
+    public List<UserResponseDto> getTeam(Long managerId) {
+        User manager = userRepository.findById(managerId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + managerId));
 
-    User manager = userRepository.findById(managerId)
-            .orElseThrow(() -> new UserNotFoundException("User not found with id: " + managerId));
+        if (manager.getRole() != UserRole.MANAGER) {
+            throw new InvalidUserRoleException("User is not a manager");
+        }
 
-    if (manager.getRole() != UserRole.MANAGER) {
-        throw new InvalidUserRoleException("User is not a manager");
+        return userRepository.findByManager_Id(manager.getId())
+                .stream()
+                .map(userMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
-
-    return userRepository.findByManager_Id(manager.getId())
-            .stream()
-            .map(userMapper::toResponseDto)
-            .collect(Collectors.toList());
-}
 
     @Override
     public List<UserResponseDto> get(String department) {
@@ -83,5 +82,11 @@ public List<UserResponseDto> getTeam(Long managerId) {
                 .map(userMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
-}
 
+    @Override
+    public UserResponseDto getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        return userMapper.toResponseDto(user);
+    }
+}

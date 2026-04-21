@@ -28,7 +28,7 @@ export default function Expenses() {
       const res = isRole('EMPLOYEE')
         ? await getMyRequests(user.userId, { size: 100 })
         : await getTravelRequests({ size: 100 });
-      const list = res.data.data?.content ?? [];
+      const list = Array.isArray(res.data) ? res.data : [];
       const filtered = list.filter(r => ['BOOKED','COMPLETED'].includes(r.status));
       setRequests(filtered);
       if (filtered.length > 0) setSelected(filtered[0]);
@@ -39,7 +39,7 @@ export default function Expenses() {
     setLoading(true);
     try {
       const res = await getExpensesByReq(reqId);
-      setExpenses(res.data.data ?? []);
+      setExpenses(res.data ?? []);
     } catch (e) { setExpenses([]); }
     finally { setLoading(false); }
   };
@@ -48,7 +48,7 @@ export default function Expenses() {
     e.preventDefault();
     setSaving(true);
     try {
-      await submitExpense({ ...form, travelRequestId: selected.id, claimedById: user.userId, amount: parseFloat(form.amount) });
+      await submitExpense({ ...form, travelRequestId: selected.id, claimedBy: user.userId, amount: parseFloat(form.amount) });
       setShowAdd(false);
       setForm({ expenseType: 'MEAL', amount: '', receiptUrl: '', notes: '', travelRequestId: '' });
       fetchExpenses(selected.id);
@@ -59,7 +59,7 @@ export default function Expenses() {
   const handleVerify = async () => {
     setSaving(true);
     try {
-      await verifyExpense(verifyModal.id, { verifiedById: user.userId, notes });
+      await verifyExpense(verifyModal.id, user.userId);
       setVerifyModal(null); setNotes('');
       fetchExpenses(selected.id);
     } catch (err) { alert(err.response?.data?.message ?? 'Failed'); }
@@ -67,14 +67,14 @@ export default function Expenses() {
   };
 
   const handleReimburse = async (id) => {
-    try { await reimburseExpense(id, { processedById: user.userId }); fetchExpenses(selected.id); }
+    try { await reimburseExpense(id); fetchExpenses(selected.id); }
     catch (err) { alert(err.response?.data?.message ?? 'Failed'); }
   };
 
   const handleReject = async (id) => {
     const reason = window.prompt('Rejection reason:');
     if (!reason) return;
-    try { await rejectExpense(id, { rejectedById: user.userId, reason }); fetchExpenses(selected.id); }
+    try { await rejectExpense(id); fetchExpenses(selected.id); }
     catch (err) { alert(err.response?.data?.message ?? 'Failed'); }
   };
 

@@ -24,4 +24,10 @@ public interface TravelRequestService {
     TravelRequestResponseDto approveByFinance(Long id);
 
     TravelRequestResponseDto rejectByFinance(Long id);
+
+    List<TravelRequestResponseDto> getBookedTravelRequests();
+
+    TravelRequestResponseDto bookTravelRequest(Long id, com.example.CorporateTravelManagementSystem.dto.TravelBookingRequestDTO bookingRequest);
+
+    TravelRequestResponseDto getTravelRequestById(Long id);
 }

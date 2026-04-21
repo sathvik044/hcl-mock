@@ -1,4 +1,13 @@
 import api from './axios';
 
-export const getPendingManagerApprovals = (managerId) => api.get(`/api/approvals/pending/manager/${managerId}`);
-export const getPendingFinanceApprovals = (params)    => api.get('/api/approvals/pending/finance', { params });
+export const getPendingManagerApprovals = () =>
+  api.get('/travel-requests').then((res) => ({
+    ...res,
+    data: (res.data ?? []).filter((request) => request.status === 'SUBMITTED'),
+  }));
+
+export const getPendingFinanceApprovals = () =>
+  api.get('/travel-requests').then((res) => ({
+    ...res,
+    data: (res.data ?? []).filter((request) => request.status === 'MANAGER_APPROVED'),
+  }));

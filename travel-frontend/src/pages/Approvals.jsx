@@ -19,11 +19,11 @@ export default function Approvals() {
     setLoading(true);
     try {
       if (tab === 'manager') {
-        const res = await getPendingManagerApprovals(user.userId);
-        setPending(res.data.data ?? []);
+        const res = await getPendingManagerApprovals();
+        setPending(res.data ?? []);
       } else {
-        const res = await getPendingFinanceApprovals({ size: 100 });
-        setPending(res.data.data?.content ?? []);
+        const res = await getPendingFinanceApprovals();
+        setPending(res.data ?? []);
       }
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
@@ -34,11 +34,10 @@ export default function Approvals() {
     setSaving(true);
     try {
       const { req, type } = actionModal;
-      const payload = { approverId: user.userId, remarks };
-      if (type === 'manager-approve') await managerApprove(req.id, payload);
-      else if (type === 'manager-reject') await managerReject(req.id, payload);
-      else if (type === 'finance-approve') await financeApprove(req.id, payload);
-      else if (type === 'finance-reject')  await financeReject(req.id, payload);
+      if (type === 'manager-approve') await managerApprove(req.id);
+      else if (type === 'manager-reject') await managerReject(req.id);
+      else if (type === 'finance-approve') await financeApprove(req.id);
+      else if (type === 'finance-reject')  await financeReject(req.id);
       setActionModal(null);
       setRemarks('');
       fetchPending();
@@ -90,7 +89,7 @@ export default function Approvals() {
                 {pending.map(req => (
                   <tr key={req.id}>
                     <td style={{ fontWeight: 700 }}>{req.requestNumber}</td>
-                    <td>{req.employee?.name}</td>
+                    <td>{req.employeeName}</td>
                     <td style={{ color: 'var(--color-text-primary)' }}>{req.fromCity} → {req.toCity}</td>
                     <td>
                       <span className={`badge ${req.travelType === 'INTERNATIONAL' ? 'badge-booked' : 'badge-submitted'}`}>
@@ -141,7 +140,7 @@ export default function Approvals() {
             <div className={`alert ${isApprove ? 'alert-success' : 'alert-error'}`}>
               {isApprove ? '✅' : '⚠️'} You are about to {isApprove ? 'approve' : 'reject'} request{' '}
               <strong>{actionModal.req.requestNumber}</strong> for{' '}
-              <strong>{actionModal.req.employee?.name}</strong> ({formatCurrency(actionModal.req.estimatedCost)}).
+              <strong>{actionModal.req.employeeName}</strong> ({formatCurrency(actionModal.req.estimatedCost)}).
             </div>
             <div className="form-group">
               <label className="form-label">Remarks {!isApprove && <span style={{ color: 'var(--color-error)' }}>*</span>}</label>

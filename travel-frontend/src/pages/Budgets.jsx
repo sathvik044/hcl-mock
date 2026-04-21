@@ -17,7 +17,7 @@ export default function Budgets() {
     setLoading(true);
     try {
       const res = await getAllBudgets();
-      setBudgets(res.data.data ?? []);
+      setBudgets(res.data ?? []);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
@@ -26,7 +26,8 @@ export default function Budgets() {
     e.preventDefault();
     setSaving(true);
     try {
-      await createBudget({ ...form, totalAllocated: parseFloat(form.totalAllocated) });
+      const totalBudget = parseFloat(form.totalAllocated);
+      await createBudget({ ...form, totalBudget, remainingBudget: totalBudget });
       setShowAdd(false);
       setForm({ department: 'Engineering', costCenter: '', financialYear: new Date().getFullYear(), totalAllocated: '' });
       fetchBudgets();
@@ -34,8 +35,8 @@ export default function Budgets() {
     finally { setSaving(false); }
   };
 
-  const totalAllocated  = budgets.reduce((s, b) => s + (b.totalAllocated ?? 0), 0);
-  const totalUtilized   = budgets.reduce((s, b) => s + (b.totalUtilized ?? 0), 0);
+  const totalAllocated  = budgets.reduce((s, b) => s + (b.totalBudget ?? 0), 0);
+  const totalUtilized   = budgets.reduce((s, b) => s + (b.utilizedBudget ?? 0), 0);
   const avgUtil         = totalAllocated > 0 ? Math.round((totalUtilized / totalAllocated) * 100) : 0;
 
   return (
@@ -70,7 +71,7 @@ export default function Budgets() {
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 'var(--space-md)' }}>
           {budgets.map(b => {
-            const pct   = b.totalAllocated > 0 ? Math.round((b.totalUtilized / b.totalAllocated) * 100) : 0;
+            const pct   = b.totalBudget > 0 ? Math.round((b.utilizedBudget / b.totalBudget) * 100) : 0;
             const color = pct >= 90 ? 'red' : pct >= 70 ? 'amber' : 'green';
             return (
               <div key={b.id} className="glass-card" style={{ padding: 'var(--space-lg)' }}>
@@ -90,9 +91,9 @@ export default function Budgets() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-sm)' }}>
                   {[
-                    ['Allocated', formatCurrency(b.totalAllocated)],
-                    ['Utilized',  formatCurrency(b.totalUtilized)],
-                    ['Remaining', formatCurrency(b.remainingBalance)],
+                    ['Allocated', formatCurrency(b.totalBudget)],
+                    ['Utilized',  formatCurrency(b.utilizedBudget)],
+                    ['Remaining', formatCurrency(b.remainingBudget)],
                   ].map(([k, v]) => (
                     <div key={k} style={{ textAlign: 'center', padding: '8px', background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-sm)' }}>
                       <div className="text-xs text-muted">{k}</div>

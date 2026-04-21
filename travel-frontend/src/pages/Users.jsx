@@ -22,9 +22,9 @@ export default function Users() {
     setLoading(true);
     try {
       const res = await getUsers({ page, size: 12 });
-      const data = res.data.data;
-      setUsers(data?.content ?? []);
-      setTotal(data?.totalElements ?? 0);
+      const data = Array.isArray(res.data) ? res.data : [];
+      setUsers(data);
+      setTotal(data.length);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
@@ -34,6 +34,7 @@ export default function Users() {
     setSaving(true);
     try {
       const payload = { ...form };
+      delete payload.password;
       if (!payload.managerId) delete payload.managerId;
       await createUser(payload);
       setShowAdd(false);

@@ -23,32 +23,32 @@ export default function Dashboard() {
           getTravelRequests({ size: 1 }),
           getAllBudgets(),
         ]);
-        results.totalRequests = all.data.data?.totalElements ?? 0;
-        results.budgets       = budgets.data.data ?? [];
+        results.totalRequests = Array.isArray(all.data) ? all.data.length : 0;
+        results.budgets       = budgets.data ?? [];
       } else if (isRole('MANAGER')) {
         const [pending, myTeam] = await Promise.all([
-          getPendingManagerApprovals(user.userId),
+          getPendingManagerApprovals(),
           getMyRequests(user.userId, { size: 100 }),
         ]);
-        results.pendingApprovals = pending.data.data?.length ?? 0;
-        results.teamRequests     = myTeam.data.data?.totalElements ?? 0;
+        results.pendingApprovals = pending.data?.length ?? 0;
+        results.teamRequests     = Array.isArray(myTeam.data) ? myTeam.data.length : 0;
       } else if (isRole('FINANCE')) {
         const [pending, budgets] = await Promise.all([
-          getPendingFinanceApprovals({ size: 100 }),
+          getPendingFinanceApprovals(),
           getAllBudgets(),
         ]);
-        results.pendingFinance = pending.data.data?.totalElements ?? 0;
-        results.budgets        = budgets.data.data ?? [];
+        results.pendingFinance = pending.data?.length ?? 0;
+        results.budgets        = budgets.data ?? [];
       } else if (isRole('EMPLOYEE')) {
         const mine = await getMyRequests(user.userId, { size: 100 });
-        const list = mine.data.data?.content ?? [];
+        const list = Array.isArray(mine.data) ? mine.data : [];
         results.myTotal    = list.length;
         results.myDraft    = list.filter(r => r.status === 'DRAFT').length;
         results.mySubmitted = list.filter(r => r.status === 'SUBMITTED').length;
         results.myApproved = list.filter(r => ['MANAGER_APPROVED','FINANCE_APPROVED','BOOKED'].includes(r.status)).length;
       } else if (isRole('TRAVEL_DESK')) {
-        const booked = await getTravelRequests({ status: 'BOOKED', size: 1 });
-        results.booked = booked.data.data?.totalElements ?? 0;
+        const booked = await getTravelRequests({ size: 100 });
+        results.booked = (Array.isArray(booked.data) ? booked.data : []).filter((request) => request.status === 'BOOKED').length;
       }
 
       setStats(results);
@@ -59,8 +59,8 @@ export default function Dashboard() {
     }
   };
 
-  const totalBudget    = (stats.budgets ?? []).reduce((s, b) => s + (b.totalAllocated ?? 0), 0);
-  const usedBudget     = (stats.budgets ?? []).reduce((s, b) => s + (b.totalUtilized ?? 0), 0);
+  const totalBudget    = (stats.budgets ?? []).reduce((s, b) => s + (b.totalBudget ?? 0), 0);
+  const usedBudget     = (stats.budgets ?? []).reduce((s, b) => s + (b.utilizedBudget ?? 0), 0);
   const avgUtilization = totalBudget > 0 ? Math.round((usedBudget / totalBudget) * 100) : 0;
 
   return (
@@ -131,13 +131,13 @@ export default function Dashboard() {
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
                 {(stats.budgets ?? []).map(b => {
-                  const pct = b.totalAllocated > 0 ? Math.round((b.totalUtilized / b.totalAllocated) * 100) : 0;
+                  const pct = b.totalBudget > 0 ? Math.round((b.utilizedBudget / b.totalBudget) * 100) : 0;
                   const color = pct >= 90 ? 'red' : pct >= 70 ? 'amber' : 'green';
                   return (
                     <div key={b.id}>
                       <div className="flex justify-between mb-sm">
                         <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-primary)', fontWeight: 600 }}>{b.department}</span>
-                        <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>{formatCurrency(b.totalUtilized)} / {formatCurrency(b.totalAllocated)} ({pct}%)</span>
+                        <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>{formatCurrency(b.utilizedBudget)} / {formatCurrency(b.totalBudget)} ({pct}%)</span>
                       </div>
                       <div className="progress-bar">
                         <div className={`progress-fill ${color}`} style={{ width: `${Math.min(pct, 100)}%` }} />

@@ -33,8 +33,14 @@ public class UserController {
     public List<UserResponseDto> getTeam(@PathVariable Long id) {
         return userService.getTeam(id);
     }
+
     @GetMapping("/department/{department}")
     public List<UserResponseDto> getUsersByDepartment(@PathVariable String department) {
-        return userService.get(department);     
-}
+        return userService.get(department);
+    }
+
+    @GetMapping("/{id}")
+    public UserResponseDto getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
 }

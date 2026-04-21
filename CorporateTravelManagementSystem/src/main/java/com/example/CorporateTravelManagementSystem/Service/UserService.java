@@ -12,5 +12,6 @@ public interface UserService {
     List<UserResponseDto> getUsersByRole(UserRole role);
     List<UserResponseDto> get(String department);
     List<UserResponseDto> getTeam(Long managerId);
+    UserResponseDto getUserById(Long id);
 }
 

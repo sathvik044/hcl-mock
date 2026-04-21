@@ -44,4 +44,9 @@ public class TravelExpenseController {
     public TravelExpenseResponseDTO reimburse(@PathVariable Long id) {
         return expenseService.reimburse(id);
     }
+
+    @PutMapping("/{id}/reject")
+    public TravelExpenseResponseDTO reject(@PathVariable Long id) {
+        return expenseService.reject(id);
+    }
 }

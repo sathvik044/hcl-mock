@@ -67,4 +67,19 @@ public class TravelRequestController {
     public TravelRequestResponseDto rejectByFinance(@PathVariable Long id) {
         return travelRequestService.rejectByFinance(id);
     }
+
+    @GetMapping("/booked")
+    public List<TravelRequestResponseDto> getBookedTravelRequests() {
+        return travelRequestService.getBookedTravelRequests();
+    }
+
+    @PutMapping("/{id}/book")
+    public TravelRequestResponseDto bookTravelRequest(@PathVariable Long id, @RequestBody com.example.CorporateTravelManagementSystem.dto.TravelBookingRequestDTO bookingRequest) {
+        return travelRequestService.bookTravelRequest(id, bookingRequest);
+    }
+
+    @GetMapping("/{id}")
+    public TravelRequestResponseDto getTravelRequestById(@PathVariable Long id) {
+        return travelRequestService.getTravelRequestById(id);
+    }
 }

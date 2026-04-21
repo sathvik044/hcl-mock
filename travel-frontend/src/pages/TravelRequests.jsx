@@ -6,7 +6,7 @@ import {
 import { StatusBadge, Modal, EmptyState, formatCurrency, formatDate } from '../components/UI';
 
 const TRAVEL_TYPES   = ['DOMESTIC', 'INTERNATIONAL'];
-const PURPOSES       = ['BUSINESS', 'CONFERENCE', 'TRAINING', 'CLIENT_MEETING', 'SITE_VISIT', 'OTHER'];
+const PURPOSES       = ['CLIENT_MEETING', 'CONFERENCE', 'TRAINING', 'INTERNAL_MEETING'];
 
 export default function TravelRequests() {
   const { user, isRole } = useAuth();
@@ -19,7 +19,7 @@ export default function TravelRequests() {
   const [showDetail, setShowDetail] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
-    employeeId: user?.userId, travelType: 'DOMESTIC', purpose: 'BUSINESS',
+    employeeId: user?.userId, travelType: 'DOMESTIC', purpose: 'CLIENT_MEETING',
     fromDate: '', toDate: '', fromCity: '', toCity: '', estimatedCost: ''
   });
 
@@ -34,9 +34,9 @@ export default function TravelRequests() {
       } else {
         res = await getTravelRequests({ page, size: 10 });
       }
-      const data = res.data.data;
-      setRequests(data?.content ?? []);
-      setTotal(data?.totalElements ?? 0);
+      const data = Array.isArray(res.data) ? res.data : [];
+      setRequests(data);
+      setTotal(data.length);
     } catch (e) { console.error(e); }
     finally   { setLoading(false); }
   };
@@ -47,7 +47,7 @@ export default function TravelRequests() {
     try {
       await createTravelRequest({ ...form, estimatedCost: parseFloat(form.estimatedCost) });
       setShowCreate(false);
-      setForm({ employeeId: user?.userId, travelType: 'DOMESTIC', purpose: 'BUSINESS', fromDate: '', toDate: '', fromCity: '', toCity: '', estimatedCost: '' });
+      setForm({ employeeId: user?.userId, travelType: 'DOMESTIC', purpose: 'CLIENT_MEETING', fromDate: '', toDate: '', fromCity: '', toCity: '', estimatedCost: '' });
       fetchRequests();
     } catch (err) {
       alert(err.response?.data?.message ?? 'Failed to create request');
@@ -56,7 +56,7 @@ export default function TravelRequests() {
 
   const handleSubmit = async (id) => {
     try {
-      await submitRequest(id, user.userId);
+      await submitRequest(id);
       fetchRequests();
     } catch (err) { alert(err.response?.data?.message ?? 'Failed to submit'); }
   };
@@ -64,7 +64,7 @@ export default function TravelRequests() {
   const handleCancel = async (id) => {
     if (!window.confirm('Cancel this travel request?')) return;
     try {
-      await cancelRequest(id, user.userId);
+      await cancelRequest(id);
       fetchRequests();
     } catch (err) { alert(err.response?.data?.message ?? 'Failed to cancel'); }
   };
@@ -111,7 +111,7 @@ export default function TravelRequests() {
                         {req.requestNumber}
                       </button>
                     </td>
-                    <td>{req.employee?.name}</td>
+                    <td>{req.employeeName}</td>
                     <td style={{ color: 'var(--color-text-primary)' }}>{req.fromCity} → {req.toCity}</td>
                     <td>{formatDate(req.fromDate)} – {formatDate(req.toDate)}</td>
                     <td>
@@ -209,7 +209,7 @@ export default function TravelRequests() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div className="grid-2">
               {[
-                ['Employee', showDetail.employee?.name],
+                ['Employee', showDetail.employeeName],
                 ['Status',   <StatusBadge status={showDetail.status} key="s" />],
                 ['From',     `${showDetail.fromCity} → ${showDetail.toCity}`],
                 ['Type',     showDetail.travelType],
@@ -223,7 +223,7 @@ export default function TravelRequests() {
               ))}
             </div>
 
-            {showDetail.approvals?.length > 0 && (
+            {false && showDetail.approvals?.length > 0 && (
               <div>
                 <div className="section-divider" />
                 <h4 style={{ fontWeight: 700, marginBottom: 12, fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>APPROVALS</h4>

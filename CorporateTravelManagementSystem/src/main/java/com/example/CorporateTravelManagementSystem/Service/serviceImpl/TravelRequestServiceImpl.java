@@ -52,7 +52,7 @@ public class TravelRequestServiceImpl implements TravelRequestService {
 
     @Override
     public TravelRequestResponseDto submitTravelRequest(Long id) {
-        TravelRequestEntity travelRequest = getTravelRequestById(id);
+        TravelRequestEntity travelRequest = findEntityById(id);
 
         if (travelRequest.getStatus() != TravelStatus.DRAFT) {
             throw new TravelRequestStateException("Only draft travel requests can be submitted");
@@ -66,7 +66,7 @@ public class TravelRequestServiceImpl implements TravelRequestService {
 
     @Override
     public TravelRequestResponseDto cancelTravelRequest(Long id) {
-        TravelRequestEntity travelRequest = getTravelRequestById(id);
+        TravelRequestEntity travelRequest = findEntityById(id);
 
         if (travelRequest.getStatus() == TravelStatus.CANCELLED) {
             throw new TravelRequestStateException("Travel request is already cancelled");
@@ -103,7 +103,7 @@ public class TravelRequestServiceImpl implements TravelRequestService {
 
     @Override
     public TravelRequestResponseDto approveByManager(Long id) {
-        TravelRequestEntity travelRequest = getTravelRequestById(id);
+        TravelRequestEntity travelRequest = findEntityById(id);
         if (travelRequest.getStatus() != TravelStatus.SUBMITTED) {
             throw new TravelRequestStateException("Only submitted requests can be approved by manager");
         }
@@ -114,7 +114,7 @@ public class TravelRequestServiceImpl implements TravelRequestService {
 
     @Override
     public TravelRequestResponseDto rejectByManager(Long id) {
-        TravelRequestEntity travelRequest = getTravelRequestById(id);
+        TravelRequestEntity travelRequest = findEntityById(id);
         if (travelRequest.getStatus() != TravelStatus.SUBMITTED) {
             throw new TravelRequestStateException("Only submitted requests can be rejected by manager");
         }
@@ -125,7 +125,7 @@ public class TravelRequestServiceImpl implements TravelRequestService {
 
     @Override
     public TravelRequestResponseDto approveByFinance(Long id) {
-        TravelRequestEntity travelRequest = getTravelRequestById(id);
+        TravelRequestEntity travelRequest = findEntityById(id);
         if (travelRequest.getStatus() != TravelStatus.MANAGER_APPROVED) {
             throw new TravelRequestStateException("Only manager approved requests can be approved by finance");
         }
@@ -136,7 +136,7 @@ public class TravelRequestServiceImpl implements TravelRequestService {
 
     @Override
     public TravelRequestResponseDto rejectByFinance(Long id) {
-        TravelRequestEntity travelRequest = getTravelRequestById(id);
+        TravelRequestEntity travelRequest = findEntityById(id);
         if (travelRequest.getStatus() != TravelStatus.MANAGER_APPROVED) {
             throw new TravelRequestStateException("Only manager approved requests can be rejected by finance");
         }
@@ -145,7 +145,31 @@ public class TravelRequestServiceImpl implements TravelRequestService {
         return travelRequestMapper.toResponseDto(travelRequestRepository.save(travelRequest));
     }
 
-    private TravelRequestEntity getTravelRequestById(Long id) {
+    @Override
+    public List<TravelRequestResponseDto> getBookedTravelRequests() {
+        return travelRequestRepository.findByStatus(TravelStatus.BOOKED)
+                .stream()
+                .map(travelRequestMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public TravelRequestResponseDto bookTravelRequest(Long id, com.example.CorporateTravelManagementSystem.dto.TravelBookingRequestDTO bookingRequest) {
+        TravelRequestEntity travelRequest = findEntityById(id);
+        if (travelRequest.getStatus() != TravelStatus.FINANCE_APPROVED) {
+            throw new TravelRequestStateException("Only finance approved requests can be booked");
+        }
+        travelRequest.setStatus(TravelStatus.BOOKED);
+        travelRequest.setUpdatedAt(LocalDateTime.now());
+        return travelRequestMapper.toResponseDto(travelRequestRepository.save(travelRequest));
+    }
+
+    @Override
+    public TravelRequestResponseDto getTravelRequestById(Long id) {
+        return travelRequestMapper.toResponseDto(findEntityById(id));
+    }
+
+    private TravelRequestEntity findEntityById(Long id) {
         return travelRequestRepository.findById(id)
                 .orElseThrow(() -> new TravelRequestNotFoundException("Travel request not found with id: " + id));
     }

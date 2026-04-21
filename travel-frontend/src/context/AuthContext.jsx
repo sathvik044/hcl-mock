@@ -11,8 +11,11 @@ export function AuthProvider({ children }) {
     const token    = localStorage.getItem('jwt_token');
     const userInfo = localStorage.getItem('user_info');
     if (token && userInfo) {
-      try { setUser(JSON.parse(userInfo)); }
-      catch { localStorage.clear(); }
+      try {
+        const parsed = JSON.parse(userInfo);
+        if (parsed.id && !parsed.userId) parsed.userId = parsed.id;
+        setUser(parsed);
+      } catch { localStorage.clear(); }
     }
     setLoading(false);
   }, []);
@@ -20,10 +23,11 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     const res  = await loginApi(email, password);
     const data = res.data.data; // ApiResponse<AuthResponse>
+    const userWithId = { ...data, userId: data.id };
     localStorage.setItem('jwt_token', data.token);
-    localStorage.setItem('user_info', JSON.stringify(data));
-    setUser(data);
-    return data;
+    localStorage.setItem('user_info', JSON.stringify(userWithId));
+    setUser(userWithId);
+    return userWithId;
   };
 
   const logout = () => {

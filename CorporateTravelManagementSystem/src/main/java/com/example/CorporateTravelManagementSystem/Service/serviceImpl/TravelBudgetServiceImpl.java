@@ -19,6 +19,12 @@ public class TravelBudgetServiceImpl implements TravelBudgetService {
     private final TravelBudgetRepository travelBudgetRepository;
 
     @Override
+    public TravelBudget createBudget(TravelBudget travelBudget) {
+        travelBudget.setRemainingBudget(travelBudget.getTotalBudget());
+        return travelBudgetRepository.save(travelBudget);
+    }
+
+    @Override
     public List<TravelBudget> getBudgetsByDepartment(String department) {
         return travelBudgetRepository.findByDepartmentIgnoreCase(department);
     }
