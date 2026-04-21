@@ -1,11 +1,10 @@
-package com.example.CorporateTravelManagementSystem.Controller;
+package com.example.CorporateTravelManagementSystem.controller;
 
-import com.example.CorporateTravelManagementSystem.dto.UserDTO;
-import com.example.CorporateTravelManagementSystem.dto.UserRequestDTO;
-import com.example.CorporateTravelManagementSystem.Service.UserService;
-import jakarta.validation.Valid;
+import com.example.CorporateTravelManagementSystem.dto.UserRequestDto;
+import com.example.CorporateTravelManagementSystem.dto.UserResponseDto;
+import com.example.CorporateTravelManagementSystem.enums.UserRole;
+import com.example.CorporateTravelManagementSystem.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,49 +16,25 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers(@RequestParam(required = false) String role) {
-        if (role != null && !role.isBlank()) {
-            return ResponseEntity.ok(userService.getUsersByRole(role));
-        }
+    @PostMapping
+    public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto) {
+        return userService.createUser(userRequestDto);
+    }
 
-        return ResponseEntity.ok(userService.getAllUsers());
+    @GetMapping
+    public List<UserResponseDto> getUsers(@RequestParam(required = false) UserRole role) {
+        if (role != null) {
+            return userService.getUsersByRole(role);
+        }
+        return userService.getAllUsers();
     }
 
     @GetMapping("/{id}/team")
-    public ResponseEntity<List<UserDTO>> getTeamMembers(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getTeamMembers(id));
+    public List<UserResponseDto> getTeam(@PathVariable Long id) {
+        return userService.getTeam(id);
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/email/{email}")
-    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
-        return userService.getUserByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO) {
-        UserDTO userDTO = userService.createUser(userRequestDTO);
-        return ResponseEntity.ok(userDTO);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDTO userRequestDTO) {
-        UserDTO userDTO = userService.updateUser(id, userRequestDTO);
-        return ResponseEntity.ok(userDTO);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
+    @GetMapping("/department/{department}")
+    public List<UserResponseDto> getUsersByDepartment(@PathVariable String department) {
+        return userService.get(department);     
+}
 }

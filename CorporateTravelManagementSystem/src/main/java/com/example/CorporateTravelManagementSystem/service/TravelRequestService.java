@@ -1,39 +1,19 @@
-package com.example.CorporateTravelManagementSystem.Service;
-
-import com.example.CorporateTravelManagementSystem.dto.ApprovalActionRequestDTO;
-import com.example.CorporateTravelManagementSystem.dto.TravelRequestDTO;
-import com.example.CorporateTravelManagementSystem.dto.TravelRequestRequestDTO;
-import com.example.CorporateTravelManagementSystem.enums.TravelStatus;
+package com.example.CorporateTravelManagementSystem.service;
 
 import java.util.List;
-import java.util.Optional;
+
+import com.example.CorporateTravelManagementSystem.dto.TravelRequestRequestDto;
+import com.example.CorporateTravelManagementSystem.dto.TravelRequestResponseDto;
 
 public interface TravelRequestService {
-    List<TravelRequestDTO> getAllTravelRequests();
 
-    Optional<TravelRequestDTO> getTravelRequestById(Long id);
+    TravelRequestResponseDto createTravelRequest(TravelRequestRequestDto travelRequestRequestDto);
 
-    List<TravelRequestDTO> getTravelRequestsByEmployee(Long employeeId);
+    TravelRequestResponseDto submitTravelRequest(Long id);
 
-    List<TravelRequestDTO> getTravelRequestsByStatus(TravelStatus status);
+    TravelRequestResponseDto cancelTravelRequest(Long id);
 
-    TravelRequestDTO createTravelRequest(TravelRequestRequestDTO requestDTO);
+    List<TravelRequestResponseDto> getAllTravelRequests();
 
-    TravelRequestDTO updateTravelRequest(Long id, TravelRequestRequestDTO requestDTO);
-
-    TravelRequestDTO submitTravelRequest(Long id);
-
-    TravelRequestDTO cancelTravelRequest(Long id);
-
-    TravelRequestDTO managerApproveTravelRequest(Long id, ApprovalActionRequestDTO requestDTO);
-
-    TravelRequestDTO managerRejectTravelRequest(Long id, ApprovalActionRequestDTO requestDTO);
-
-    TravelRequestDTO financeApproveTravelRequest(Long id, ApprovalActionRequestDTO requestDTO);
-
-    TravelRequestDTO financeRejectTravelRequest(Long id, ApprovalActionRequestDTO requestDTO);
-
-    TravelRequestDTO updateTravelRequestStatus(Long id, TravelStatus status);
-
-    void deleteTravelRequest(Long id);
+    List<TravelRequestResponseDto> getTravelRequestsByEmployee(Long employeeId);
 }

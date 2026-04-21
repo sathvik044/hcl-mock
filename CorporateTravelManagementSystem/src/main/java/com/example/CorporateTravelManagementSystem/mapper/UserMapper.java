@@ -1,35 +1,42 @@
 package com.example.CorporateTravelManagementSystem.mapper;
 
-import com.example.CorporateTravelManagementSystem.dto.UserDTO;
-import com.example.CorporateTravelManagementSystem.dto.UserRequestDTO;
-import com.example.CorporateTravelManagementSystem.entity.User;
 import org.springframework.stereotype.Component;
+
+import com.example.CorporateTravelManagementSystem.dto.UserRequestDto;
+import com.example.CorporateTravelManagementSystem.dto.UserResponseDto;
+import com.example.CorporateTravelManagementSystem.entity.User;
 
 @Component
 public class UserMapper {
 
-    public UserDTO toDTO(User user) {
-        return UserDTO.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .department(user.getDepartment())
-                .role(user.getRole())
-                .employeeId(user.getEmployeeId())
-                .managerId(user.getManagerId())
-                .build();
+    public User toEntity(UserRequestDto userRequestDto) {
+        User user = new User();
+        user.setName(userRequestDto.getName());
+        user.setEmail(userRequestDto.getEmail());
+        user.setRole(userRequestDto.getRole());
+        user.setDepartment(userRequestDto.getDepartment());
+        user.setCostCenter(userRequestDto.getCostCenter());
+        return user;
     }
 
-    public User toEntity(UserRequestDTO userRequestDTO) {
-        return User.builder()
-                .firstName(userRequestDTO.getFirstName())
-                .lastName(userRequestDTO.getLastName())
-                .email(userRequestDTO.getEmail())
-                .department(userRequestDTO.getDepartment())
-                .role(userRequestDTO.getRole())
-                .employeeId(userRequestDTO.getEmployeeId())
-                .managerId(userRequestDTO.getManagerId())
-                .build();
+    public UserResponseDto toResponseDto(User user) {
+        Long managerId = null;
+        String managerName = null;
+
+        if (user.getManager() != null) {
+            managerId = user.getManager().getId();
+            managerName = user.getManager().getName();
+        }
+
+        return new UserResponseDto(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole(),
+                user.getDepartment(),
+                user.getCostCenter(),
+                managerId,
+                managerName,
+                user.getCreatedAt());
     }
 }

@@ -1,19 +1,27 @@
-package com.example.CorporateTravelManagementSystem.Repository;
-
-import com.example.CorporateTravelManagementSystem.entity.User;
+package com.example.CorporateTravelManagementSystem.repository;
+import java.util.Optional; 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
+import com.example.CorporateTravelManagementSystem.entity.User;
+import com.example.CorporateTravelManagementSystem.enums.UserRole;
 import java.util.List;
-import java.util.Optional;
 
-@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+      
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByEmployeeId(String employeeId);
 
-    List<User> findByRoleIgnoreCase(String role);
+    List<User> findByRole(UserRole role);
 
-    List<User> findByManagerId(Long managerId);
+    
+    List<User> findByDepartment(String department);
+
+
+    List<User> findByCostCenter(String costCenter);
+
+    
+    List<User> findByManager_Id(Long managerId);
+
+   
+    boolean existsByEmail(String email);
+    
 }

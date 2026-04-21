@@ -1,25 +1,16 @@
-package com.example.CorporateTravelManagementSystem.Service;
+package com.example.CorporateTravelManagementSystem.service;
 
-import com.example.CorporateTravelManagementSystem.dto.UserDTO;
-import com.example.CorporateTravelManagementSystem.dto.UserRequestDTO;
-
+import com.example.CorporateTravelManagementSystem.dto.UserRequestDto;
+import com.example.CorporateTravelManagementSystem.dto.UserResponseDto;
+import com.example.CorporateTravelManagementSystem.enums.UserRole;
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
-    List<UserDTO> getAllUsers();
-
-    List<UserDTO> getUsersByRole(String role);
-
-    List<UserDTO> getTeamMembers(Long managerId);
-
-    Optional<UserDTO> getUserById(Long id);
-
-    Optional<UserDTO> getUserByEmail(String email);
-
-    UserDTO createUser(UserRequestDTO userRequestDTO);
-
-    UserDTO updateUser(Long id, UserRequestDTO userRequestDTO);
-
-    void deleteUser(Long id);
+    
+    UserResponseDto createUser(UserRequestDto userRequestDto);
+    List<UserResponseDto> getAllUsers();
+    List<UserResponseDto> getUsersByRole(UserRole role);
+    List<UserResponseDto> get(String department);
+    List<UserResponseDto> getTeam(Long managerId);
 }
+
