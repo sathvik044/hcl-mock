@@ -1,11 +1,16 @@
-package com.example.CorporateTravelManagementSystem.exception;
+package com.example.CorporateTravelManagementSystem.Exception;
+
+import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-public record ApiErrorResponse(
-        LocalDateTime timestamp,
-        int status,
-        String error,
-        String message,
-        String path) {
+@Getter
+@Builder
+public class ApiErrorResponse {
+    private final LocalDateTime timestamp;
+    private final int status;
+    private final String error;
+    private final String message;
+    private final String path;
 }
